@@ -94,6 +94,7 @@ class ToRomanBadInput(unittest.TestCase):
         self.assertRaises(roman5.NotIntegerError, roman5.to_roman, 0.5)
 
 
+
 class test_roundtrip(unittest.TestCase):
 
     def test_roundtrip(self):
@@ -102,6 +103,22 @@ class test_roundtrip(unittest.TestCase):
             numeral = roman5.to_roman(integer)
             result = roman5.from_roman(numeral)
             self.assertEqual(integer, result)
+
+class FromRomanBadInput(unittest.TestCase):
+    def test_too_many_repeated_numerals(self):
+        '''from_roman should fail with too many repeated numerals'''
+        for s in ('MMMM', 'DD', 'CCCC', 'LL', 'XXXX', 'VV', 'IIII'):
+            self.assertRaises(roman5.InvalidRomanNumeralError, roman5.from_roman, s)
+
+    def test_repeated_pairs(self):
+        '''from_roman shoul fail with repeated pairs of numerals'''
+        for s in ('CMCM', 'CDCD', 'XCXC', 'XLXL', 'IXIX', 'IVIV'):
+            self.assertRaises(roman5.InvalidRomanNumeralError, roman5.from_roman, s)
+
+    def test_malformed_antecedents(self):
+        '''from_roman should fail with malformed antecedents'''
+        for s in ('IIMXCC', 'VX', 'DCM', 'CMM', 'IXIV', 'MCMC', 'XCX', 'IVI', 'LM', 'LD', 'LC'):
+            self.assertRaises(roman5.InvalidRomanNumeralError, roman5.from_roman, s)
 
 if __name__ == '__main__':
     unittest.main()
